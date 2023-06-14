@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selectors';
+import { selectContacts, selectFilter, selectIsLoading } from 'redux/selectors';
 import { deleteContact } from 'redux/operations';
 
 import css from '../App/App.module.css';
+import { Loader } from 'components/Loader/Loader';
 
 const ContactsList = () => {
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
+  const isLoading = useSelector(selectIsLoading);
   const dispatch = useDispatch();
 
   const getVisibleContact = () => {
@@ -17,24 +19,27 @@ const ContactsList = () => {
 
   const visibleContacts = getVisibleContact();
   return (
-    <div className={css.contacts}>
-      <ul className={css.numberList}>
-        {visibleContacts.map(contact => (
-          <li key={contact.id} className={css.contactItem}>
-            <span>{contact.name}</span>
-            <div>
-              <span className={css.number}> : {contact.number}</span>
-              <button
-                className={css.deleteBtn}
-                onClick={() => dispatch(deleteContact(contact.id))}
-              >
-                X
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      {isLoading && <Loader />}
+      <div className={css.contacts}>
+        <ul className={css.numberList}>
+          {visibleContacts.map(contact => (
+            <li key={contact.id} className={css.contactItem}>
+              <span>{contact.name}</span>
+              <div>
+                <span className={css.number}> : {contact.number}</span>
+                <button
+                  className={css.deleteBtn}
+                  onClick={() => dispatch(deleteContact(contact.id))}
+                >
+                  X
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
 // ContactsList.propTypes = {
