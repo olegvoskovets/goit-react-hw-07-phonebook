@@ -1,23 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter, selectIsLoading } from 'redux/selectors';
+import { selectFilterSearch, selectIsLoading } from 'redux/selectors';
 import { deleteContact } from 'redux/operations';
 
 import css from '../App/App.module.css';
 import { Loader } from 'components/Loader/Loader';
 
 const ContactsList = () => {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
   const isLoading = useSelector(selectIsLoading);
   const dispatch = useDispatch();
 
-  const getVisibleContact = () => {
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLocaleLowerCase())
-    );
-  };
-
-  const visibleContacts = getVisibleContact();
+  const visibleContacts = useSelector(selectFilterSearch);
   return (
     <>
       {isLoading && <Loader />}
@@ -42,15 +34,5 @@ const ContactsList = () => {
     </>
   );
 };
-// ContactsList.propTypes = {
-//   visibleContacts: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string.isRequired,
-//       name: PropTypes.string.isRequired,
-//       number: PropTypes.string.isRequired,
-//     })
-//   ).isRequired,
-//   deleteContact: PropTypes.func,
-// };
 
 export default ContactsList;
